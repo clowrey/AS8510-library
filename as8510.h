@@ -148,10 +148,10 @@ public:
     void printSaturationFlags();
     void printAllDiagnostics();
   
-      // Utility methods
-    float getShuntResistance() { return _shuntResistance; }
-    void setShuntResistance(float resistance) { _shuntResistance = resistance; }
-    
+  // Utility methods
+  float getShuntResistance() { return _shuntResistance; }
+  void setShuntResistance(float resistance) { _shuntResistance = resistance; }
+  
     // Verbose logging control
     void setVerboseLogging(bool verbose) { _verboseLogging = verbose; }
     bool getVerboseLogging() { return _verboseLogging; }
@@ -201,11 +201,11 @@ bool AS8510::begin() {
     
   digitalWrite(_csPin, HIGH);
   
-    // Initialize HSPI
-    _spi = new SPIClass(HSPI);
+    // Initialize VSPI (shared with LCD, different CS pins)
+    _spi = new SPIClass(VSPI);
     _spi->begin(_sckPin, _misoPin, _mosiPin, _csPin);
     
-    Serial.println("AS8510: HSPI initialized, starting register configuration...");
+    Serial.println("AS8510: VSPI initialized, starting register configuration...");
     
     // Exact initialization sequence from Rust library
     writeRegister(AS8510_DEC_REG_R1_I, 0b01000101);    // 0x45
@@ -468,7 +468,7 @@ float AS8510::getVoltage() {
     
         Serial.printf("AS8510: Voltage: %.3f V\n", voltage);
     
-    return voltage;
+  return voltage;
 }
 
 float AS8510::getBatteryVoltage() {
